@@ -1,0 +1,118 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body{
+      top: 0;
+      margin: 0;
+      padding: 0;
+      background-color: #eee;
+    }
+    form{
+      margin: auto;
+      width: 50%;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    form #div{
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+    form #div input{
+        margin-top: 0.8rem;
+        padding: 0.5rem;
+    }
+    form #contactdiv{
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+  form #contactdiv input{
+        margin-top: 0.4rem;
+    }
+    h1{
+      text-align: center;
+    }
+ .detailinput{
+  display: flex;
+ }
+ button{
+  cursor: pointer;
+ }
+  </style>
+  <body>
+    <h1>Edit Employee</h1>
+    <form
+      method="POST"
+      action="/employees/update/{{employee._id}}"
+      enctype="multipart/form-data"
+    >
+      <div id="div">
+        <label>Name:</label>
+        <input type="text" name="name" value="{{employee.name}}" required />
+      </div>
+      <div id="div">
+        <label>Department:</label>
+        <input
+          type="text"
+          name="department"
+          value="{{employee.department}}"
+          required
+        />
+      </div>
+      <div id="contactdiv">
+        <label>More Details:</label>
+     
+          {{#each employee.contacts}}
+          <div class="detailinput">
+             <div id="contacts">
+               <div>
+              <input
+                type="text"
+                name="contacts[{{@index}}][type]"
+                value="{{this.type}}"
+                placeholder="Type"
+                required
+              />
+              <input  
+                type="text"
+                name="contacts[{{@index}}][value]"
+                value="{{this.value}}"
+                placeholder="Value"
+                required
+              />
+              </div>
+              </div>
+            </div>
+           
+          {{/each}}
+     
+      
+        <button type="button" onclick="addContact()"   style="margin-top: 0.3rem;">Add More details</button>
+      </div>
+      <div id="div">
+      <button type="submit">Update</button>
+      </div>
+    </form>
+    <script>
+      function addContact() { const contactsDiv =
+      document.getElementById('contacts'); const contactsCount =
+      contactsDiv.childElementCount; const contactDiv =
+      document.createElement('div'); const typeInput =
+      document.createElement('input'); typeInput.type = 'text'; typeInput.name =
+      `contacts[${contactsCount}][type]`; typeInput.placeholder = 'Type';
+      typeInput.required = true; const valueInput =
+      document.createElement('input'); valueInput.type = 'text'; valueInput.name
+      = `contacts[${contactsCount}][value]`; valueInput.placeholder = 'Value';
+      valueInput.required = true; contactDiv.appendChild(typeInput);
+      contactDiv.appendChild(valueInput); contactsDiv.appendChild(contactDiv); }
+    </script>
+
+  </body>
+</html>

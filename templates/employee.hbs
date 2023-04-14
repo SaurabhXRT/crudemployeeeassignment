@@ -1,0 +1,173 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>employee management for infoware</title>
+  </head>
+  <script>
+    function addContact() { const contactsDiv =
+    document.getElementById('contacts'); const contactsCount =
+    contactsDiv.childElementCount; const contactDiv =
+    document.createElement('div'); const typeInput =
+    document.createElement('input'); typeInput.type = 'text'; typeInput.name =
+    `contacts[${contactsCount}][type]`; typeInput.placeholder = 'Type';
+    typeInput.required = true; const valueInput =
+    document.createElement('input'); valueInput.type = 'text'; valueInput.name =
+    `contacts[${contactsCount}][value]`; valueInput.placeholder = 'Value';
+    valueInput.required = true; contactDiv.appendChild(typeInput);
+    contactDiv.appendChild(valueInput); contactsDiv.appendChild(contactDiv); }
+
+  </script>
+  <style>
+    body{ top: 0; margin: 0; padding: 0; background-color: #eee; } li{
+    list-style-type: none; } .container{ display: flex; padding: 2rem; width:
+    100%; } .container-form { margin: 3rem 2rem 0 0 ; width: 60%; }
+    .employeelist{ margin: 3rem 2rem 0 0; width: 90%; } .container-form form{
+    width: 90%; padding: 1rem; font-size: 1rem; background-color: #fff; }
+    .container-form form #div{ display: flex; flex-direction: column; padding:
+    0.5rem; } .container-form form #div input{ margin-top: 0.8rem; }
+    .container-form form #contactdiv{ display: flex; flex-direction: column;
+    padding: 0.5rem; } .container-form form #contactdiv input{ margin-top:
+    0.4rem; } .employeelist table{ width: 100%; background-color: #fff; padding:
+    1rem; } .employeelist table tbody tr td{ padding: 0.5rem; text-align: left;
+    } .employeelist table thead tr th{ text-align: left; padding: 0.5rem ; }
+    .heading{
+        background-color: #fff;
+        text-align: center;
+        font-size: 1.5rem;
+        padding: 0.1rem;
+    }
+    .searchdiv form input,button{
+        padding: 0.3rem;
+        border-radius: 0.6rem;
+    }
+    button{
+      cursor: pointer;
+    }
+     .employeelist table tbody tr td  li{ 
+      padding: 0.5rem;
+      text-align: left;
+     }
+
+  </style>
+  <body>
+    <div class="heading">
+      <p>infoware assignement</p>
+    </div>
+    <div class="container">
+      <div class="container-form">
+        <form method="POST" action="/employees" enctype="multipart/form-data">
+          <div id="div">
+            <h1>Create an Employee </h1>
+          </div>
+          <div id="div">
+            <label>Name:</label>
+            <input type="text" name="name" required />
+          </div>
+          <div id="div">
+            <label>Department:</label>
+            <input type="text" name="department" required />
+          </div>
+          <div id="contactdiv">
+            <label>More  Details:</label>
+
+          <div id="contacts">
+      <div>
+        <input type="text" name="contacts[0][type]" placeholder="Type" required>
+        <input type="text" name="contacts[0][value]" placeholder="Value" required>
+      </div>
+   
+    </div>
+
+            <button
+              type="button"
+              onclick="addContact()"
+              style="margin-top: 0.3rem;"
+            >Add more details</button>
+          </div>
+          <div id="div">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="employeelist">
+        <div class="searchdiv">
+          <form method="get" action="/search">
+            <input
+              type="text"
+              name="searchquery"
+              placeholder="enter name of employee"
+            />
+            <button value="submit">get employee details</button>
+          </form>
+
+
+        </div>
+        <table>
+          <h2>Employeelist</h2>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Details</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each employees}}
+              <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.department}}</td>
+                <td>
+                
+
+                    {{#each this.contacts}}
+                      <li>{{this.type}}: {{this.value}}</li>
+                    {{/each}}
+                
+                </td>
+                <td>
+                  <a
+                    href="/employees/{{this._id}}"
+                    onclick="event.preventDefault(); if (confirm('Are you sure you want to delete this employee?')) { document.getElementById('delete-form-{{this._id}}').submit(); }"
+                  >Delete</a>
+                  <form
+                    id="delete-form-{{this._id}}"
+                    method="POST"
+                    action="/employees/{{this._id}}?_method=DELETE"
+                    style="display: inline;"
+                  >
+                    <input type="hidden" name="_method" value="DELETE" />
+                  </form>
+                  <form
+                    method="GET"
+                    action="/employees/{{this._id}}/edit"
+                    style="display: inline;"
+                  >
+                    <button type="submit">Edit</button>
+                  </form>
+                </td>
+              </tr>
+
+            {{/each}}
+          </tbody>
+        </table>
+        <div class="pagination">
+          {{#if hasPrevPage}}
+            <a href="?page={{prevPage}}&limit={{limit}}">&laquo; Prev</a>
+          {{/if}}
+
+          {{#if hasNextPage}}
+            <a href="?page={{nextPage}}&limit={{limit}}">Next &raquo;</a>
+          {{/if}}
+        </div>
+
+      </div>
+
+    </div>
+
+  </body>
+</html>
