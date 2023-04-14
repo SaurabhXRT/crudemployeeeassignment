@@ -20,9 +20,10 @@ app.set("view engine", "hbs");
 
 
 //mongodb connection
+const uri = "mongodb+srv://saurabhbabu287:RdoC8AJYy7iNzW52@cluster0.jg5mpmq.mongodb.net/?retryWrites=true&w=majority"
 mongoose.set('strictQuery',false);
 const db = mongoose.connection;
-mongoose.connect( 'mongodb://127.0.0.1:27017/crud', {
+mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
